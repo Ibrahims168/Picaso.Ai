@@ -1,9 +1,7 @@
 {
-	"folders": [
-		{
-			"name": "picaso-ai",
-			"path": "../../../.."
-		}
-	],
-	"settings": {}
+    "folders": [
+        {
+            "path": "../../../.."
+        }
+    ]
 }
