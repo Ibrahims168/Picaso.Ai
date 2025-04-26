@@ -1,5 +1,4 @@
-import mongoose from "mongoose";
-import { Mongoose } from "mongoose";
+import mongoose, { Mongoose } from "mongoose";
 
 const MONGODB_URL = process.env.MONGODB_URL;
 
@@ -8,13 +7,15 @@ interface MongooseConnection {
   promise: Promise<Mongoose> | null;
 }
 
-let cached: MongooseConnection = (global as any).mongoose;
+// Declare the global type
+declare global {
+  var mongoose: MongooseConnection | undefined;
+}
 
-if (cached) {
-  cached = (global as any).mongoose = {
-    conn: null,
-    promise: null,
-  };
+let cached = global.mongoose;
+
+if (!cached) {
+  cached = global.mongoose = { conn: null, promise: null };
 }
 
 export const connectToDatabase = async () => {
@@ -29,7 +30,7 @@ export const connectToDatabase = async () => {
       bufferCommands: false,
     });
 
-    cached.conn = await cached.promise;
+  cached.conn = await cached.promise;
 
-    return cached.conn;
+  return cached.conn;
 };
