@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import { clerkClient } from "@clerk/nextjs";
+import { clerkClient } from "@clerk/clerk-sdk-node";
 import { WebhookEvent } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { Webhook } from "svix";
@@ -50,14 +50,24 @@ export async function POST(req: Request) {
     return new Response("Invalid signature", { status: 400 });
   }
 
-  const { id } = evt.data;
+  const { id } = evt.data ?? {}; // Safely handle missing `id` in the event data
   const eventType = evt.type;
+
+  if (!id) {
+    console.error("No user id found in the event data");
+    return new Response("User ID missing", { status: 400 });
+  }
 
   console.log(`Received webhook event: ${eventType} for user ID: ${id}`);
 
   // CREATE
   if (eventType === "user.created") {
-    const { email_addresses, image_url, first_name, last_name, username } = evt.data;
+    const { email_addresses, image_url, first_name, last_name, username } = evt.data ?? {};
+
+    if (!email_addresses || email_addresses.length === 0 || !username) {
+      console.error("Missing required user information for creation.");
+      return new Response("Missing user information", { status: 400 });
+    }
 
     const user = {
       clerkId: id,
@@ -83,7 +93,7 @@ export async function POST(req: Request) {
 
   // UPDATE
   if (eventType === "user.updated") {
-    const { image_url, first_name, last_name, username } = evt.data;
+    const { image_url, first_name, last_name, username } = evt.data ?? {};
 
     const user = {
       firstName: first_name,
