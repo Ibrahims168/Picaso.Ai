@@ -7,7 +7,6 @@ interface MongooseConnection {
   promise: Promise<Mongoose> | null;
 }
 
-// Declare the global type
 declare global {
   var mongoose: MongooseConnection | undefined;
 }
