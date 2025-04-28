@@ -1,15 +1,41 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, models } from "mongoose";
 
-const userSchema = new Schema({
-  clerkId: { type: String, required: true, unique: true },
-  email: { type: String, required: true },
-  username: { type: String },
-  firstName: { type: String },
-  lastName: { type: String },
-  photo: { type: String },
-  creditBalance: { type: Number, default: 0 },
+const UserSchema = new Schema({
+  clerkId: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  username: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  photo: {
+    type: String,
+    required: true,
+  },
+  firstName: {
+    type: String,
+  },
+  lastName: {
+    type: String,
+  },
+  planId: {
+    type: Number,
+    default: 1,
+  },
+  creditBalance: {
+    type: Number,
+    default: 10,
+  },
 });
 
-const User = model("User", userSchema);
+const User = models?.User || model("User", UserSchema);
 
 export default User;
