@@ -1,44 +1,25 @@
-import { auth } from "@clerk/nextjs/server";
-import { getUserById } from "@/lib/actions/user.actions";
-import { transformationTypes } from "@/constants";
-import Header from "@/components/shared/Header";
-import TransformationForm from "@/components/shared/transformationForm";
-import { redirect } from "next/navigation";
+import Header from '@/components/shared/Header'
+import TransformationForm from '@/components/shared/transformationForm';
+import { transformationTypes } from '@/constants'
+import { getUserById } from '@/lib/actions/user.actions';
+import { auth } from '@clerk/nextjs/server';
+import { redirect } from 'next/navigation';
 
-// Correct typing using Next.js PageProps
-interface PageProps {
-  params: {
-    type: string;
-  };
-}
-
-const AddTransformationTypePage = async ({ params }: PageProps) => {
-  const { type } = params; // Destructuring is fine now
-
+const AddTransformationTypePage = async ({ params: { type } }: SearchParamProps) => {
   const { userId } = await auth();
-  console.log("userId from auth:", userId);
+  const transformation = transformationTypes[type];
 
-  if (!userId) {
-    redirect("/sign-in");
-  }
+  if(!userId) redirect('/sign-in')
 
   const user = await getUserById(userId);
 
-  if (!user) {
-    console.error("User not found");
-    redirect("/");
-  }
-
-  if (!type || !(type in transformationTypes)) {
-    console.error("Invalid transformation type:", type);
-    redirect("/");
-  }
-
-  const transformation = transformationTypes[type as keyof typeof transformationTypes];
-
   return (
     <>
-      <Header title={transformation.title} subtitle={transformation.subTitle} />
+      <Header 
+        title={transformation.title}
+        subtitle={transformation.subTitle}
+      />
+    
       <section className="mt-10">
         <TransformationForm 
           action="Add"
@@ -48,7 +29,7 @@ const AddTransformationTypePage = async ({ params }: PageProps) => {
         />
       </section>
     </>
-  );
-};
+  )
+}
 
-export default AddTransformationTypePage;
+export default AddTransformationTypePage
