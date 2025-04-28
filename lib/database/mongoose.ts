@@ -1,3 +1,5 @@
+/* eslint-disable no-var */
+
 import mongoose, { Mongoose } from 'mongoose';
 
 const MONGODB_URL = process.env.MONGODB_URL;
@@ -7,12 +9,12 @@ interface MongooseConnection {
   promise: Promise<Mongoose> | null;
 }
 
-// Declare global.mongoose to avoid TypeScript error
+// Properly extend the global object
 declare global {
   var mongoose: MongooseConnection | undefined;
 }
 
-const cached: MongooseConnection = global.mongoose || { conn: null, promise: null };
+const cached = globalThis.mongoose ?? (globalThis.mongoose = { conn: null, promise: null });
 
 export const connectToDatabase = async () => {
   if (cached.conn) return cached.conn;
@@ -21,11 +23,12 @@ export const connectToDatabase = async () => {
 
   cached.promise =
     cached.promise ||
-    mongoose.connect(MONGODB_URL, { 
-      dbName: 'picasodb', bufferCommands: false 
+    mongoose.connect(MONGODB_URL, {
+      dbName: 'picasodb',
+      bufferCommands: false,
     });
 
   cached.conn = await cached.promise;
 
   return cached.conn;
-}
+};
