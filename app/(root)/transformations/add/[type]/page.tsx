@@ -5,19 +5,21 @@ import { getUserById } from '@/lib/actions/user.actions';
 import { auth } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 
-interface SearchParamProps  {
-  params: { id: string; type: TransformationTypeKey };
-  searchParams: { [key: string]: string | string[] | undefined };
-};
+type TransformationTypeKey = keyof typeof transformationTypes;
 
-const AddTransformationTypePage = async ({ params: { type } }: SearchParamProps) => {
+interface PageProps {
+  params: { type: TransformationTypeKey };
+  searchParams?: { [key: string]: string | string[] | undefined };
+}
+
+const AddTransformationTypePage = async ({ params }: PageProps) => {
+  const { type } = params;
+
   const { userId } = await auth();
-  const transformation = transformationTypes[type];
-  console.log("USER ID CREATED : " + userId)
-  
-  if(!userId) redirect('/sign-in')
+  if (!userId) redirect('/sign-in');
 
   const user = await getUserById(userId);
+  const transformation = transformationTypes[type];
 
   return (
     <>
@@ -35,7 +37,7 @@ const AddTransformationTypePage = async ({ params: { type } }: SearchParamProps)
         />
       </section>
     </>
-  )
-}
+  );
+};
 
-export default AddTransformationTypePage
+export default AddTransformationTypePage;
