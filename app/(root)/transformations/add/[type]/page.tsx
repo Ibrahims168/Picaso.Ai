@@ -1,15 +1,17 @@
+// page.tsx
 import Header from '@/components/shared/Header'
 import TransformationForm from '@/components/shared/transformationForm';
 import { transformationTypes } from '@/constants'
-// import { getUserById } from '@/lib/actions/user.actions';
 import { auth } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 
-const AddTransformationTypePage = async ({
-  params,
-}: {
-  params: { type: TransformationTypeKey };
-}) => {
+type Props = {
+  params: {
+    type: keyof typeof transformationTypes;
+  };
+};
+
+const AddTransformationTypePage = async ({ params }: Props) => {
   const { userId } = await auth();
   const transformation = transformationTypes[params.type];
 
@@ -21,7 +23,6 @@ const AddTransformationTypePage = async ({
         title={transformation.title}
         subtitle={transformation.subTitle}
       />
-    
       <section className="mt-10">
         <TransformationForm 
           action="Add"
