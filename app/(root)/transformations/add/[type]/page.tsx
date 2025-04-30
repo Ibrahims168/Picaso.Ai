@@ -1,7 +1,8 @@
-// page.tsx
-import Header from '@/components/shared/Header'
+// app/(root)/transformations/add/[type]/page.tsx
+
+import Header from '@/components/shared/Header';
 import TransformationForm from '@/components/shared/transformationForm';
-import { transformationTypes } from '@/constants'
+import { transformationTypes } from '@/constants';
 import { auth } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 
@@ -11,6 +12,7 @@ type Props = {
   };
 };
 
+// ✅ Do NOT annotate return type at all – let Next.js handle it
 const AddTransformationTypePage = async ({ params }: Props) => {
   const { userId } = await auth();
   const transformation = transformationTypes[params.type];
