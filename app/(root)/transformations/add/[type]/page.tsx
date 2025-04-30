@@ -1,6 +1,6 @@
-import Header from '@/components/shared/Header'
+import Header from '@/components/shared/Header';
 import TransformationForm from '@/components/shared/transformationForm';
-import { transformationTypes } from '@/constants'
+import { transformationTypes } from '@/constants';
 import { getUserById } from '@/lib/actions/user.actions';
 import { auth } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
@@ -8,12 +8,15 @@ import { redirect } from 'next/navigation';
 const AddTransformationTypePage = async ({ params: { type } }: SearchParamProps) => {
   const { userId } = await auth();
   const transformation = transformationTypes[type];
-  console.log("USER ID CREATED : " + userId)
-  
+
   if(!userId) redirect('/sign-in')
 
-  const user = await getUserById(userId);
-
+    const user = await getUserById(userId);
+    if (!user) {
+      console.error('User not found for ID:', userId);
+      redirect('/sign-up'); // Redirect to sign-up if user doesn't exist
+    }
+  
   return (
     <>
       <Header 
@@ -33,4 +36,5 @@ const AddTransformationTypePage = async ({ params: { type } }: SearchParamProps)
   )
 }
 
-export default AddTransformationTypePage
+
+export default AddTransformationTypePage;
