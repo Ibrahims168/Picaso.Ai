@@ -5,13 +5,11 @@ import TransformationForm from '@/components/shared/transformationForm';
 import { transformationTypes } from '@/constants';
 import { getUserById } from '@/lib/actions/user.actions';
 
-type SearchParamProps  = {
-  params: {
-    type: TransformationTypeKey;
-  };
-};
-
-const AddTransformationTypePage = async ({ params }: SearchParamProps ) => {
+const AddTransformationTypePage = async ({
+  params,
+}: {
+  params: { type: TransformationTypeKey };
+}) => {
   const { userId } = await auth();
 
   const transformation = transformationTypes[params.type];
