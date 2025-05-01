@@ -1,15 +1,24 @@
-import Header from '@/components/shared/Header'
+import Header from '@/components/shared/Header';
 import TransformationForm from '@/components/shared/transformationForm';
-import { transformationTypes } from '@/constants'
+import { transformationTypes } from '@/constants';
 import { getUserById } from '@/lib/actions/user.actions';
 import { auth } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 
-const AddTransformationTypePage = async ({ params: { type } }: SearchParamProps) => {
+// Type for the page params based on the route structure
+interface AddTransformationTypePageProps {
+  params: {
+    type: keyof typeof transformationTypes; // Assuming transformationTypes is an object
+  };
+}
+
+const AddTransformationTypePage = async ({ params: { type } }: AddTransformationTypePageProps) => {
   const { userId } = await auth();
   const transformation = transformationTypes[type];
 
-  if(!userId) redirect('/sign-in')
+  if (!userId) {
+    redirect('/sign-in');
+  }
 
   const user = await getUserById(userId);
 
@@ -29,7 +38,7 @@ const AddTransformationTypePage = async ({ params: { type } }: SearchParamProps)
         />
       </section>
     </>
-  )
+  );
 }
 
-export default AddTransformationTypePage
+export default AddTransformationTypePage;
