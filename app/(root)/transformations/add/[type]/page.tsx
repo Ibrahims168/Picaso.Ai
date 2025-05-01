@@ -4,22 +4,28 @@ import { transformationTypes } from '@/constants';
 import { getUserById } from '@/lib/actions/user.actions';
 import { auth } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
+import { Metadata } from 'next';
 
-// Type for the page params based on the route structure
-interface AddTransformationTypePageProps {
+// Optional: If this page depends on dynamic data
+export const dynamic = 'force-dynamic';
+
+// Type for the page props
+type PageProps = {
   params: {
-    type: "restore" | "removeBackground" | "fill" | "remove" | "recolor"; // Use exact type for 'type'
+    type: 'restore' | 'removeBackground' | 'fill' | 'remove' | 'recolor';
   };
-}
+};
 
-const AddTransformationTypePage = async ({ params: { type } }: AddTransformationTypePageProps) => {
+const AddTransformationTypePage = async ({ params }: PageProps) => {
+  const { type } = params;
+
   const { userId } = await auth();
-  const transformation = transformationTypes[type];
 
   if (!userId) {
     redirect('/sign-in');
   }
 
+  const transformation = transformationTypes[type];
   const user = await getUserById(userId);
 
   return (
@@ -39,6 +45,6 @@ const AddTransformationTypePage = async ({ params: { type } }: AddTransformation
       </section>
     </>
   );
-}
+};
 
 export default AddTransformationTypePage;
