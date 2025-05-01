@@ -4,7 +4,6 @@ import { transformationTypes } from '@/constants';
 import { getUserById } from '@/lib/actions/user.actions';
 import { auth } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
-import { Metadata } from 'next';
 
 // Optional: If this page depends on dynamic data
 export const dynamic = 'force-dynamic';
