@@ -1,25 +1,27 @@
-// page.tsx
 import Header from '@/components/shared/Header'
 import TransformationForm from '@/components/shared/transformationForm';
 import { transformationTypes } from '@/constants'
 import { auth } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 
-type Props = {
-  params: {
-    type: keyof typeof transformationTypes;
-  };
-};
+type TransformationTypeKey = 'restore' | 'removeBackground' | 'fill' | 'remove' | 'recolor';
 
-const AddTransformationTypePage = async ({ params }: Props) => {
-  const { userId } = await auth();
-  const transformation = transformationTypes[params.type];
+export default async function AddTransformationTypePage({
+  params,
+}: {
+  params: { type: TransformationTypeKey };
+}) {
+  const authResult = await auth();
+  const userId = authResult?.userId;
 
   if (!userId) redirect('/sign-in');
 
+  const transformation = transformationTypes[params.type];
+  if (!transformation) redirect('/404'); // optional, in case of bad route
+
   return (
     <>
-      <Header 
+      <Header  
         title={transformation.title}
         subtitle={transformation.subTitle}
       />
@@ -34,5 +36,3 @@ const AddTransformationTypePage = async ({ params }: Props) => {
     </>
   );
 };
-
-export default AddTransformationTypePage;
