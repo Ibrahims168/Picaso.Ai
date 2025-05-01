@@ -4,7 +4,6 @@ import { transformationTypes } from '@/constants'
 import { auth } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 
-type TransformationTypeKey = 'restore' | 'removeBackground' | 'fill' | 'remove' | 'recolor';
 
 export default async function AddTransformationTypePage({
   params,
