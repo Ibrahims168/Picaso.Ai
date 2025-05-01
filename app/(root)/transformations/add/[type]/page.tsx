@@ -1,30 +1,21 @@
-import Header from '@/components/shared/Header';
+import Header from '@/components/shared/Header'
 import TransformationForm from '@/components/shared/transformationForm';
-import { transformationTypes } from '@/constants';
+import { transformationTypes } from '@/constants'
 import { getUserById } from '@/lib/actions/user.actions';
 import { auth } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 
+
+
 // Optional: If this page depends on dynamic data
 export const dynamic = 'force-dynamic';
 
-// Type for the page props
-type PageProps = {
-  params: {
-    type: 'restore' | 'removeBackground' | 'fill' | 'remove' | 'recolor';
-  };
-};
-
-const AddTransformationTypePage = async ({ params }: PageProps) => {
-  const { type } = params;
-
+const AddTransformationTypePage = async ({ params: { type } }: SearchParamProps) => {
   const { userId } = await auth();
-
-  if (!userId) {
-    redirect('/sign-in');
-  }
-
   const transformation = transformationTypes[type];
+
+  if(!userId) redirect('/sign-in')
+
   const user = await getUserById(userId);
 
   return (
@@ -43,7 +34,7 @@ const AddTransformationTypePage = async ({ params }: PageProps) => {
         />
       </section>
     </>
-  );
-};
+  )
+}
 
-export default AddTransformationTypePage;
+export default AddTransformationTypePage
