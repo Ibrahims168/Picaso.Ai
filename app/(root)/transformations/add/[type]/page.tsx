@@ -8,7 +8,7 @@ import { redirect } from 'next/navigation';
 // Type for the page params based on the route structure
 interface AddTransformationTypePageProps {
   params: {
-    type: keyof typeof transformationTypes; // Assuming transformationTypes is an object
+    type: "restore" | "removeBackground" | "fill" | "remove" | "recolor"; // Use exact type for 'type'
   };
 }
 
