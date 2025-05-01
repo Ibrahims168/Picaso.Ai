@@ -24,7 +24,7 @@ export const connectToDatabase = async () => {
   cached.promise =
     cached.promise ||
     mongoose.connect(MONGODB_URL, {
-      dbName: 'picasodb',
+      dbName: process.env.MONGODB_DB_NAME || 'picasodb',
       bufferCommands: false,
     });
 
