@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
-import { clerkClient } from "@clerk/nextjs/server";
 import { WebhookEvent } from "@clerk/nextjs/server";
+import { clerkClient } from "@clerk/clerk-sdk-node"; // ✅ correct import
+
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { Webhook } from "svix";
@@ -18,10 +19,10 @@ export async function POST(req: Request) {
   }
 
   // Get the headers
-  const headerPayload = headers();
-  const svix_id = (await headerPayload).get("svix-id");
-  const svix_timestamp = (await headerPayload).get("svix-timestamp");
-  const svix_signature = (await headerPayload).get("svix-signature");
+  const headerPayload = await headers();
+  const svix_id = headerPayload.get("svix-id");
+  const svix_timestamp = headerPayload.get("svix-timestamp");
+  const svix_signature = headerPayload.get("svix-signature");
 
   // If there are no headers, error out
   if (!svix_id || !svix_timestamp || !svix_signature) {
@@ -74,12 +75,12 @@ export async function POST(req: Request) {
 
     // Set public metadata
     if (newUser) {
-      const client = await clerkClient(); // Wait for the client to be resolved
-      await client.users.updateUserMetadata(id, {
+      await clerkClient.users.updateUser(id, {
         publicMetadata: {
           userId: newUser._id,
         },
       });
+      
     }
 
     return NextResponse.json({ message: "OK", user: newUser });
